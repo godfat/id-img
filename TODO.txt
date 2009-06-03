@@ -1,0 +1,3 @@
+* check file existence via nginx instead of ruby
+* how to protect from random string request? max file number?
+* better config and process management
