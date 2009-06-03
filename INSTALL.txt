@@ -1,0 +1,9 @@
+gem:
+  - quilt
+  - rmagick
+  - rack
+  - thin
+
+other:
+  - nginx
+  - imagemagick
