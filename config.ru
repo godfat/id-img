@@ -7,21 +7,22 @@ class IdImg
   Pub  = "#{Root}/public/images"
 
   def self.ensure_path
-    (0...16).each{ |i|
-      path = "#{Pub}/#{i.to_s(16)}"
+    (0...16).each{ |prefix|
+      path = "#{Pub}/#{prefix.to_s(16)}"
       Dir.mkdir(path) unless File.exist?(path)
     }
   end
 
   def call env
-    info = Digest::MD5.hexdigest(env['PATH_INFO'][1..-1])
-    path = "#{info[0..0]}/#{env['PATH_INFO']}"
-    root = "#{Pub}/#{path}"
+    filename = File.basename(env['PATH_INFO'])
+    input    = filename.sub(/\.\w+$/, '')
+    uri      = "#{Digest::MD5.hexdigest(input)[0..0]}/#{filename}"
+    path     = "#{Pub}/#{uri}"
 
-    Quilt::Identicon.new(info, :size => 100).
-      write(root) unless File.exist?(root)
+    Quilt::Identicon.new(input, :size => 15).
+      write(path) unless File.exist?(path)
 
-    [200, {'X-Accel-Redirect' => "/images/#{path}"}, '']
+    [200, {'X-Accel-Redirect' => "/images/#{uri}"}, '']
   end
 end
 
